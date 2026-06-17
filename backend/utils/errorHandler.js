@@ -73,7 +73,7 @@ const globalErrorHandler = (err, req, res, next) => {
   } else {
     res.status(statusCode).json({
       success: false,
-      message: err.isOperational ? message : "Something went wrong",
+      message,
     });
   }
 };
