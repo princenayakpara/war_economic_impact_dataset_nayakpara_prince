@@ -1,0 +1,1076 @@
+{
+  "info": {
+    "name": "War Economic Impact API — Nayakpara Prince",
+    "description": "Complete REST API documentation for the War Economic Impact Dataset (Dataset No. 18).\n\nThis API provides full CRUD operations, advanced filtering, aggregation pipelines, JWT authentication, role-based access control, and search functionality for analyzing the economic impact of global armed conflicts.\n\n**Base URL:** `{{baseURL}}`\n\n**Authentication:** JWT Bearer Token — Include `Authorization: Bearer <token>` header for protected routes.\n\n**Author:** Prince Nayakpara",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏥 Health & Version",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/health", "host": ["{{baseURL}}"], "path": ["health"] },
+            "description": "Check if the API server is running and healthy."
+          }
+        },
+        {
+          "name": "Health Check (HEAD)",
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/health", "host": ["{{baseURL}}"], "path": ["health"] },
+            "description": "HEAD request for health check — returns 200 status with no body."
+          }
+        },
+        {
+          "name": "Health Check (OPTIONS)",
+          "request": {
+            "method": "OPTIONS",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/health", "host": ["{{baseURL}}"], "path": ["health"] },
+            "description": "Returns allowed HTTP methods for the health endpoint."
+          }
+        },
+        {
+          "name": "API Version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/version", "host": ["{{baseURL}}"], "path": ["version"] },
+            "description": "Get current API version, dataset name, and dataset number."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 Authentication (Auth)",
+      "description": "User authentication endpoints using JWT tokens. Includes registration, login, logout, password management, and profile access.",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    console.log('Token saved to collection variable.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Prince Nayakpara\",\n  \"email\": \"prince@warimpact.org\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/auth/register", "host": ["{{baseURL}}"], "path": ["auth", "register"] },
+            "description": "Register a new user account. Returns a JWT token on success. Token is auto-saved to collection variables."
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    console.log('Token saved to collection variable.');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prince@warimpact.org\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/auth/login", "host": ["{{baseURL}}"], "path": ["auth", "login"] },
+            "description": "Login with email & password. Returns JWT token. Token is auto-saved to collection variables."
+          }
+        },
+        {
+          "name": "Login (OPTIONS)",
+          "request": {
+            "method": "OPTIONS",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/auth/login", "host": ["{{baseURL}}"], "path": ["auth", "login"] },
+            "description": "Returns allowed HTTP methods for the login endpoint."
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/auth/logout", "host": ["{{baseURL}}"], "path": ["auth", "logout"] },
+            "description": "Logout user. JWT is stateless — client should discard the token."
+          }
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/auth/me", "host": ["{{baseURL}}"], "path": ["auth", "me"] },
+            "description": "Get the profile of the currently authenticated user. Requires JWT token."
+          }
+        },
+        {
+          "name": "Get Current User (HEAD)",
+          "request": {
+            "method": "HEAD",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/auth/me", "host": ["{{baseURL}}"], "path": ["auth", "me"] },
+            "description": "HEAD request for /auth/me — returns X-User-Authenticated header."
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prince@warimpact.org\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/auth/forgot-password", "host": ["{{baseURL}}"], "path": ["auth", "forgot-password"] },
+            "description": "Request a password reset email (simulated)."
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prince@warimpact.org\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/auth/reset-password", "host": ["{{baseURL}}"], "path": ["auth", "reset-password"] },
+            "description": "Reset user password using email and new password."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"paste_refresh_token_here\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/auth/refresh-token", "host": ["{{baseURL}}"], "path": ["auth", "refresh-token"] },
+            "description": "Refresh an expired JWT token using a valid refresh token."
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/auth/account", "host": ["{{baseURL}}"], "path": ["auth", "account"] },
+            "description": "Soft-delete the authenticated user's account. Requires JWT token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔑 JWT Token Management",
+      "description": "Direct JWT token operations — generate, verify, refresh tokens, and access role-based protected routes.",
+      "item": [
+        {
+          "name": "Generate Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prince@warimpact.org\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/jwt/generate-token", "host": ["{{baseURL}}"], "path": ["jwt", "generate-token"] },
+            "description": "Manually generate a JWT token using email and password."
+          }
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"paste_jwt_token_here\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/jwt/verify-token", "host": ["{{baseURL}}"], "path": ["jwt", "verify-token"] },
+            "description": "Verify if a JWT token is valid and decode its payload."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"paste_refresh_token_here\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/jwt/refresh-token", "host": ["{{baseURL}}"], "path": ["jwt", "refresh-token"] },
+            "description": "Refresh an expired JWT token."
+          }
+        },
+        {
+          "name": "JWT Profile (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/jwt/profile", "host": ["{{baseURL}}"], "path": ["jwt", "profile"] },
+            "description": "Access JWT-protected profile route."
+          }
+        },
+        {
+          "name": "JWT Dashboard (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/jwt/dashboard", "host": ["{{baseURL}}"], "path": ["jwt", "dashboard"] },
+            "description": "Access JWT-protected dashboard with conflict stats."
+          }
+        },
+        {
+          "name": "JWT Admin Only",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/jwt/admin", "host": ["{{baseURL}}"], "path": ["jwt", "admin"] },
+            "description": "Admin-only JWT route. Requires admin role."
+          }
+        },
+        {
+          "name": "JWT User Only",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/jwt/user", "host": ["{{baseURL}}"], "path": ["jwt", "user"] },
+            "description": "User-only JWT route. Requires user role."
+          }
+        },
+        {
+          "name": "JWT Logout",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/jwt/logout", "host": ["{{baseURL}}"], "path": ["jwt", "logout"] },
+            "description": "JWT logout — client should remove token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — CRUD",
+      "description": "Core CRUD operations for conflict records.",
+      "item": [
+        {
+          "name": "Get All Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/conflicts?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["conflicts"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number for pagination" },
+                { "key": "limit", "value": "10", "description": "Number of results per page" },
+                { "key": "sort", "value": "Start_Year", "description": "Sort field", "disabled": true },
+                { "key": "order", "value": "desc", "description": "Sort order (asc/desc)", "disabled": true },
+                { "key": "country", "value": "Syria", "description": "Filter by country", "disabled": true },
+                { "key": "sector", "value": "Energy", "description": "Filter by affected sector", "disabled": true },
+                { "key": "blackMarket", "value": "Dominant", "description": "Filter by black market level", "disabled": true }
+              ]
+            },
+            "description": "Get all conflict records with pagination, filtering, and sorting support."
+          }
+        },
+        {
+          "name": "Get All Conflicts (HEAD)",
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts", "host": ["{{baseURL}}"], "path": ["conflicts"] },
+            "description": "HEAD request — returns headers with total count metadata."
+          }
+        },
+        {
+          "name": "Get All Conflicts (OPTIONS)",
+          "request": {
+            "method": "OPTIONS",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts", "host": ["{{baseURL}}"], "path": ["conflicts"] },
+            "description": "Returns allowed HTTP methods for the conflicts endpoint."
+          }
+        },
+        {
+          "name": "Get Conflict by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "Get a single conflict record by its MongoDB ObjectID."
+          }
+        },
+        {
+          "name": "Get Conflict by ID (HEAD)",
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "HEAD request for a single conflict."
+          }
+        },
+        {
+          "name": "Get Conflict by ID (OPTIONS)",
+          "request": {
+            "method": "OPTIONS",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "Returns allowed HTTP methods for a single conflict."
+          }
+        },
+        {
+          "name": "Create Conflict (POST)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Conflict_Name\": \"Test Conflict\",\n  \"Conflict_Type\": \"Civil War\",\n  \"Primary_Country\": \"TestCountry\",\n  \"Region\": \"Middle East\",\n  \"Start_Year\": 2020,\n  \"Status\": \"Ongoing\",\n  \"GDP_Change_%\": -15.5,\n  \"Inflation_Rate_%\": 120.0,\n  \"During_War_Poverty_Rate_%\": 55.0,\n  \"Most_Affected_Sector\": \"Energy\",\n  \"Black_Market_Activity_Level\": \"High\",\n  \"Cost_of_War_USD\": 50000000000\n}"
+            },
+            "url": { "raw": "{{baseURL}}/conflicts", "host": ["{{baseURL}}"], "path": ["conflicts"] },
+            "description": "Create a new conflict record with all economic impact fields."
+          }
+        },
+        {
+          "name": "Replace Conflict (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Conflict_Name\": \"Updated Test Conflict\",\n  \"Conflict_Type\": \"Interstate\",\n  \"Primary_Country\": \"TestCountry\",\n  \"Region\": \"Europe\",\n  \"Start_Year\": 2020,\n  \"End_Year\": 2023,\n  \"Status\": \"Resolved\",\n  \"GDP_Change_%\": -22.0,\n  \"Inflation_Rate_%\": 85.0,\n  \"During_War_Poverty_Rate_%\": 40.0\n}"
+            },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "Fully replace a conflict record (PUT)."
+          }
+        },
+        {
+          "name": "Update Conflict (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Status\": \"Resolved\",\n  \"End_Year\": 2024\n}"
+            },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "Partially update a conflict record (PATCH)."
+          }
+        },
+        {
+          "name": "Delete Conflict",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}"] },
+            "description": "Soft-delete a conflict record by its ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — Partial Updates (PATCH)",
+      "description": "Field-specific PATCH endpoints for surgical updates to individual conflict fields.",
+      "item": [
+        {
+          "name": "Update Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Status\": \"Resolved\",\n  \"End_Year\": 2024\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/status", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "status"] }
+          }
+        },
+        {
+          "name": "Update Inflation",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Inflation_Rate_%\": 250.5\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/inflation", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "inflation"] }
+          }
+        },
+        {
+          "name": "Update GDP",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"GDP_Change_%\": -45.2\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/gdp", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "gdp"] }
+          }
+        },
+        {
+          "name": "Update Poverty",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"During_War_Poverty_Rate_%\": 82.0\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/poverty", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "poverty"] }
+          }
+        },
+        {
+          "name": "Update Unemployment",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"During_War_Unemployment_%\": 35.0\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/unemployment", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "unemployment"] }
+          }
+        },
+        {
+          "name": "Update Sector",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Most_Affected_Sector\": \"Agriculture\"\n}" },
+            "url": { "raw": "{{baseURL}}/conflicts/{{conflictId}}/sector", "host": ["{{baseURL}}"], "path": ["conflicts", "{{conflictId}}", "sector"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — Advanced Queries",
+      "description": "Pre-built advanced query endpoints for specific data analysis use cases.",
+      "item": [
+        {
+          "name": "Compare Two Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/compare?conflict1=Syrian Civil War&conflict2=Russia-Ukraine War",
+              "host": ["{{baseURL}}"],
+              "path": ["compare"],
+              "query": [
+                { "key": "conflict1", "value": "Syrian Civil War" },
+                { "key": "conflict2", "value": "Russia-Ukraine War" }
+              ]
+            },
+            "description": "Compare the economic impact of two conflicts side-by-side."
+          }
+        },
+        {
+          "name": "AI Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/summary/ai", "host": ["{{baseURL}}"], "path": ["conflicts", "summary", "ai"] },
+            "description": "Get an AI-generated summary of the entire conflict database."
+          }
+        },
+        {
+          "name": "Top Highest Inflation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/top/highest-inflation", "host": ["{{baseURL}}"], "path": ["conflicts", "top", "highest-inflation"] },
+            "description": "Get conflicts with the highest inflation rates."
+          }
+        },
+        {
+          "name": "Top Highest Poverty",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/top/highest-poverty", "host": ["{{baseURL}}"], "path": ["conflicts", "top", "highest-poverty"] },
+            "description": "Get conflicts with the highest poverty rates."
+          }
+        },
+        {
+          "name": "Recent Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/recent", "host": ["{{baseURL}}"], "path": ["conflicts", "recent"] },
+            "description": "Get the most recently started conflicts."
+          }
+        },
+        {
+          "name": "Latest Conflict",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/latest", "host": ["{{baseURL}}"], "path": ["conflicts", "latest"] },
+            "description": "Get the single most recent conflict."
+          }
+        },
+        {
+          "name": "Random Conflict",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/random", "host": ["{{baseURL}}"], "path": ["conflicts", "random"] },
+            "description": "Get a random conflict record from the database."
+          }
+        },
+        {
+          "name": "Trending Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/trending", "host": ["{{baseURL}}"], "path": ["conflicts", "trending"] },
+            "description": "Get trending conflicts (highest economic impact)."
+          }
+        },
+        {
+          "name": "Ongoing Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/ongoing", "host": ["{{baseURL}}"], "path": ["conflicts", "ongoing"] },
+            "description": "Get all currently ongoing conflicts."
+          }
+        },
+        {
+          "name": "Resolved Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/resolved", "host": ["{{baseURL}}"], "path": ["conflicts", "resolved"] },
+            "description": "Get all resolved conflicts."
+          }
+        },
+        {
+          "name": "High Risk Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/high-risk", "host": ["{{baseURL}}"], "path": ["conflicts", "high-risk"] },
+            "description": "Get conflicts classified as high-risk based on economic indicators."
+          }
+        },
+        {
+          "name": "Economic Collapse Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseURL}}/conflicts/economic-collapse", "host": ["{{baseURL}}"], "path": ["conflicts", "economic-collapse"] },
+            "description": "Get conflicts that caused economic collapse."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — Route Parameters",
+      "description": "Lookup conflicts by specific field values via URL route parameters.",
+      "item": [
+        {
+          "name": "By Name",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/name/Syrian Civil War", "host": ["{{baseURL}}"], "path": ["conflicts", "name", "Syrian Civil War"] } }
+        },
+        {
+          "name": "By Type",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/type/Civil War", "host": ["{{baseURL}}"], "path": ["conflicts", "type", "Civil War"] } }
+        },
+        {
+          "name": "By Region",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/region/Middle East", "host": ["{{baseURL}}"], "path": ["conflicts", "region", "Middle East"] } }
+        },
+        {
+          "name": "By Status",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/status/Ongoing", "host": ["{{baseURL}}"], "path": ["conflicts", "status", "Ongoing"] } }
+        },
+        {
+          "name": "By Country",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/country/Syria", "host": ["{{baseURL}}"], "path": ["conflicts", "country", "Syria"] } }
+        },
+        {
+          "name": "By Start Year",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/start-year/2011", "host": ["{{baseURL}}"], "path": ["conflicts", "start-year", "2011"] } }
+        },
+        {
+          "name": "By End Year",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/end-year/1945", "host": ["{{baseURL}}"], "path": ["conflicts", "end-year", "1945"] } }
+        },
+        {
+          "name": "By Inflation Rate",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/inflation/100", "host": ["{{baseURL}}"], "path": ["conflicts", "inflation", "100"] } }
+        },
+        {
+          "name": "By GDP Loss",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/gdp-loss/30", "host": ["{{baseURL}}"], "path": ["conflicts", "gdp-loss", "30"] } }
+        },
+        {
+          "name": "By Poverty Rate",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/poverty/50", "host": ["{{baseURL}}"], "path": ["conflicts", "poverty", "50"] } }
+        },
+        {
+          "name": "By Extreme Poverty",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/extreme-poverty/30", "host": ["{{baseURL}}"], "path": ["conflicts", "extreme-poverty", "30"] } }
+        },
+        {
+          "name": "By Food Insecurity",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/food-insecurity/50", "host": ["{{baseURL}}"], "path": ["conflicts", "food-insecurity", "50"] } }
+        },
+        {
+          "name": "By Unemployment",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/unemployment/25", "host": ["{{baseURL}}"], "path": ["conflicts", "unemployment", "25"] } }
+        },
+        {
+          "name": "By Youth Unemployment",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/youth-unemployment/40", "host": ["{{baseURL}}"], "path": ["conflicts", "youth-unemployment", "40"] } }
+        },
+        {
+          "name": "By Sector",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/sector/Energy", "host": ["{{baseURL}}"], "path": ["conflicts", "sector", "Energy"] } }
+        },
+        {
+          "name": "By Black Market Level",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/black-market/Dominant", "host": ["{{baseURL}}"], "path": ["conflicts", "black-market", "Dominant"] } }
+        },
+        {
+          "name": "By Black Market Goods",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/black-market-goods/Fuel", "host": ["{{baseURL}}"], "path": ["conflicts", "black-market-goods", "Fuel"] } }
+        },
+        {
+          "name": "By Profiteering",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/profiteering/Yes", "host": ["{{baseURL}}"], "path": ["conflicts", "profiteering", "Yes"] } }
+        },
+        {
+          "name": "By Currency Gap",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/currency-gap/100", "host": ["{{baseURL}}"], "path": ["conflicts", "currency-gap", "100"] } }
+        },
+        {
+          "name": "By Reconstruction Cost",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/reconstruction-cost/100000000000", "host": ["{{baseURL}}"], "path": ["conflicts", "reconstruction-cost", "100000000000"] } }
+        },
+        {
+          "name": "By Cost of War",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/cost-of-war/50000000000", "host": ["{{baseURL}}"], "path": ["conflicts", "cost-of-war", "50000000000"] } }
+        },
+        {
+          "name": "By Pre-War Informal Economy",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/informal-economy/pre/30", "host": ["{{baseURL}}"], "path": ["conflicts", "informal-economy", "pre", "30"] } }
+        },
+        {
+          "name": "By During-War Informal Economy",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/informal-economy/during/50", "host": ["{{baseURL}}"], "path": ["conflicts", "informal-economy", "during", "50"] } }
+        },
+        {
+          "name": "By Households Fallen Into Poverty",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/households/1000000", "host": ["{{baseURL}}"], "path": ["conflicts", "households", "1000000"] } }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — Composite Routes",
+      "description": "Multi-parameter composite routes for targeted data lookups.",
+      "item": [
+        {
+          "name": "Latest in Region",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/region/Middle East/latest", "host": ["{{baseURL}}"], "path": ["conflicts", "region", "Middle East", "latest"] } }
+        },
+        {
+          "name": "Oldest in Region",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/region/Europe/oldest", "host": ["{{baseURL}}"], "path": ["conflicts", "region", "Europe", "oldest"] } }
+        },
+        {
+          "name": "Country History",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/country/Syria/history", "host": ["{{baseURL}}"], "path": ["conflicts", "country", "Syria", "history"] } }
+        },
+        {
+          "name": "Count by Type",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/type/Civil War/count", "host": ["{{baseURL}}"], "path": ["conflicts", "type", "Civil War", "count"] } }
+        },
+        {
+          "name": "Count by Status",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/status/Ongoing/count", "host": ["{{baseURL}}"], "path": ["conflicts", "status", "Ongoing", "count"] } }
+        },
+        {
+          "name": "By Active Year",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/year/2022", "host": ["{{baseURL}}"], "path": ["conflicts", "year", "2022"] } }
+        },
+        {
+          "name": "Highest GDP Loss in Sector",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/sector/Energy/highest-gdp-loss", "host": ["{{baseURL}}"], "path": ["conflicts", "sector", "Energy", "highest-gdp-loss"] } }
+        },
+        {
+          "name": "Highest Inflation in Sector",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/sector/Energy/highest-inflation", "host": ["{{baseURL}}"], "path": ["conflicts", "sector", "Energy", "highest-inflation"] } }
+        }
+      ]
+    },
+    {
+      "name": "⚔️ Conflicts — War Detail Routes",
+      "description": "Detailed breakdowns for specific wars by name.",
+      "item": [
+        {
+          "name": "War Summary",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/summary", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "summary"] } }
+        },
+        {
+          "name": "War Economic Impact",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/economic-impact", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "economic-impact"] } }
+        },
+        {
+          "name": "War Poverty Impact",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/poverty-impact", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "poverty-impact"] } }
+        },
+        {
+          "name": "War Black Market",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/black-market", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "black-market"] } }
+        },
+        {
+          "name": "War Reconstruction",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/reconstruction", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "reconstruction"] } }
+        },
+        {
+          "name": "War Currency Crisis",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/currency-crisis", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "currency-crisis"] } }
+        },
+        {
+          "name": "War Unemployment",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/conflicts/war/Syrian Civil War/unemployment", "host": ["{{baseURL}}"], "path": ["conflicts", "war", "Syrian Civil War", "unemployment"] } }
+        }
+      ]
+    },
+    {
+      "name": "📊 Statistics & Aggregation",
+      "description": "Aggregated statistics using MongoDB aggregation pipelines.",
+      "item": [
+        {
+          "name": "Overview Dashboard",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/overview", "host": ["{{baseURL}}"], "path": ["stats", "overview"] }, "description": "Complete dashboard overview with aggregated stats." }
+        },
+        {
+          "name": "Total Conflicts",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/total-conflicts", "host": ["{{baseURL}}"], "path": ["stats", "total-conflicts"] } }
+        },
+        {
+          "name": "Total Conflicts (HEAD)",
+          "request": { "method": "HEAD", "url": { "raw": "{{baseURL}}/stats/total-conflicts", "host": ["{{baseURL}}"], "path": ["stats", "total-conflicts"] } }
+        },
+        {
+          "name": "Ongoing Conflicts Count",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/ongoing-conflicts", "host": ["{{baseURL}}"], "path": ["stats", "ongoing-conflicts"] } }
+        },
+        {
+          "name": "Resolved Conflicts Count",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/resolved-conflicts", "host": ["{{baseURL}}"], "path": ["stats", "resolved-conflicts"] } }
+        },
+        {
+          "name": "Highest Inflation",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-inflation", "host": ["{{baseURL}}"], "path": ["stats", "highest-inflation"] } }
+        },
+        {
+          "name": "Lowest GDP",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/lowest-gdp", "host": ["{{baseURL}}"], "path": ["stats", "lowest-gdp"] } }
+        },
+        {
+          "name": "Highest Poverty",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-poverty", "host": ["{{baseURL}}"], "path": ["stats", "highest-poverty"] } }
+        },
+        {
+          "name": "Highest Food Insecurity",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-food-insecurity", "host": ["{{baseURL}}"], "path": ["stats", "highest-food-insecurity"] } }
+        },
+        {
+          "name": "Highest Currency Gap",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-currency-gap", "host": ["{{baseURL}}"], "path": ["stats", "highest-currency-gap"] } }
+        },
+        {
+          "name": "Highest War Cost",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-war-cost", "host": ["{{baseURL}}"], "path": ["stats", "highest-war-cost"] } }
+        },
+        {
+          "name": "Highest Reconstruction Cost",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/highest-reconstruction-cost", "host": ["{{baseURL}}"], "path": ["stats", "highest-reconstruction-cost"] } }
+        },
+        {
+          "name": "Stats by Region (Aggregation)",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/by-region", "host": ["{{baseURL}}"], "path": ["stats", "by-region"] }, "description": "MongoDB aggregation pipeline grouping stats by region." }
+        },
+        {
+          "name": "Stats by Type (Aggregation)",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/by-type", "host": ["{{baseURL}}"], "path": ["stats", "by-type"] }, "description": "MongoDB aggregation pipeline grouping stats by conflict type." }
+        },
+        {
+          "name": "Stats by Sector (Aggregation)",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/by-sector", "host": ["{{baseURL}}"], "path": ["stats", "by-sector"] }, "description": "MongoDB aggregation pipeline grouping stats by affected sector." }
+        },
+        {
+          "name": "Stats by Decade (Aggregation)",
+          "request": { "method": "GET", "url": { "raw": "{{baseURL}}/stats/by-decade", "host": ["{{baseURL}}"], "path": ["stats", "by-decade"] }, "description": "MongoDB aggregation pipeline grouping stats by decade." }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Search",
+      "description": "Full-text search and field-specific search endpoints.",
+      "item": [
+        {
+          "name": "Keyword Search",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseURL}}/search?q=Syria",
+              "host": ["{{baseURL}}"],
+              "path": ["search"],
+              "query": [{ "key": "q", "value": "Syria" }]
+            },
+            "description": "Search across multiple fields using a keyword."
+          }
+        },
+        {
+          "name": "Search (OPTIONS)",
+          "request": { "method": "OPTIONS", "url": { "raw": "{{baseURL}}/search", "host": ["{{baseURL}}"], "path": ["search"] } }
+        },
+        {
+          "name": "Search Conflicts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseURL}}/search/conflicts?q=Civil War",
+              "host": ["{{baseURL}}"],
+              "path": ["search", "conflicts"],
+              "query": [{ "key": "q", "value": "Civil War" }]
+            },
+            "description": "Search within conflict names and types."
+          }
+        },
+        {
+          "name": "Search Economic",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseURL}}/search/economic?q=inflation",
+              "host": ["{{baseURL}}"],
+              "path": ["search", "economic"],
+              "query": [{ "key": "q", "value": "inflation" }]
+            },
+            "description": "Search within economic impact fields."
+          }
+        },
+        {
+          "name": "Search by Sector",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseURL}}/search/sector?q=Energy",
+              "host": ["{{baseURL}}"],
+              "path": ["search", "sector"],
+              "query": [{ "key": "q", "value": "Energy" }]
+            }
+          }
+        },
+        {
+          "name": "Search Black Market",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseURL}}/search/black-market?q=Fuel",
+              "host": ["{{baseURL}}"],
+              "path": ["search", "black-market"],
+              "query": [{ "key": "q", "value": "Fuel" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Admin Routes (Protected)",
+      "description": "Admin-only routes requiring JWT token with admin role.",
+      "item": [
+        {
+          "name": "Admin — Get All Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/admin/conflicts", "host": ["{{baseURL}}"], "path": ["admin", "conflicts"] }
+          }
+        },
+        {
+          "name": "Admin — Create Conflict",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Conflict_Name\": \"Admin Test Conflict\",\n  \"Conflict_Type\": \"Proxy War\",\n  \"Primary_Country\": \"AdminLand\",\n  \"Region\": \"Africa\",\n  \"Start_Year\": 2023,\n  \"Status\": \"Ongoing\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/admin/conflicts", "host": ["{{baseURL}}"], "path": ["admin", "conflicts"] }
+          }
+        },
+        {
+          "name": "Admin — Update Conflict",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"Status\": \"Resolved\"\n}" },
+            "url": { "raw": "{{baseURL}}/admin/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["admin", "conflicts", "{{conflictId}}"] }
+          }
+        },
+        {
+          "name": "Admin — Delete Conflict",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/admin/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["admin", "conflicts", "{{conflictId}}"] }
+          }
+        },
+        {
+          "name": "Admin — Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/admin/dashboard", "host": ["{{baseURL}}"], "path": ["admin", "dashboard"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔒 Protected Routes (JWT Required)",
+      "description": "Routes that require JWT authentication but not admin role.",
+      "item": [
+        {
+          "name": "Protected — Get All Conflicts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/protected/conflicts", "host": ["{{baseURL}}"], "path": ["protected", "conflicts"] }
+          }
+        },
+        {
+          "name": "Protected — Create Conflict",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Conflict_Name\": \"Protected Test Conflict\",\n  \"Conflict_Type\": \"Insurgency\",\n  \"Primary_Country\": \"ProtectedLand\",\n  \"Region\": \"South Asia\",\n  \"Start_Year\": 2024,\n  \"Status\": \"Ongoing\"\n}"
+            },
+            "url": { "raw": "{{baseURL}}/protected/conflicts", "host": ["{{baseURL}}"], "path": ["protected", "conflicts"] }
+          }
+        },
+        {
+          "name": "Protected — Delete Conflict",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseURL}}/protected/conflicts/{{conflictId}}", "host": ["{{baseURL}}"], "path": ["protected", "conflicts", "{{conflictId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Extra Resource Routes (Mock)",
+      "description": "Additional mock resource endpoints for POST, PUT, and DELETE operations on sub-entities.",
+      "item": [
+        {
+          "name": "Create Region",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Central Asia\",\n  \"conflictCount\": 3\n}" },
+            "url": { "raw": "{{baseURL}}/regions", "host": ["{{baseURL}}"], "path": ["regions"] }
+          }
+        },
+        {
+          "name": "Replace Region",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Updated Region\",\n  \"conflictCount\": 5\n}" },
+            "url": { "raw": "{{baseURL}}/regions/mock_id_1", "host": ["{{baseURL}}"], "path": ["regions", "mock_id_1"] }
+          }
+        },
+        {
+          "name": "Delete Region",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseURL}}/regions/mock_id_1", "host": ["{{baseURL}}"], "path": ["regions", "mock_id_1"] } }
+        },
+        {
+          "name": "Create Economic Record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"gdpChange\": -25.5,\n  \"inflationRate\": 300\n}" },
+            "url": { "raw": "{{baseURL}}/economic-records", "host": ["{{baseURL}}"], "path": ["economic-records"] }
+          }
+        },
+        {
+          "name": "Create Poverty Record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"povertyRate\": 82,\n  \"extremePoverty\": 45\n}" },
+            "url": { "raw": "{{baseURL}}/poverty-records", "host": ["{{baseURL}}"], "path": ["poverty-records"] }
+          }
+        },
+        {
+          "name": "Create Black Market Record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"level\": \"Dominant\",\n  \"primaryGoods\": \"Fuel\"\n}" },
+            "url": { "raw": "{{baseURL}}/black-market-records", "host": ["{{baseURL}}"], "path": ["black-market-records"] }
+          }
+        },
+        {
+          "name": "Create War Cost Record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"costUSD\": 500000000000\n}" },
+            "url": { "raw": "{{baseURL}}/war-cost-records", "host": ["{{baseURL}}"], "path": ["war-cost-records"] }
+          }
+        },
+        {
+          "name": "Create Unemployment Record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"preWar\": 8.5,\n  \"duringWar\": 35.0\n}" },
+            "url": { "raw": "{{baseURL}}/unemployment-records", "host": ["{{baseURL}}"], "path": ["unemployment-records"] }
+          }
+        }
+      ]
+    }
+  ]
+}
