@@ -55,9 +55,8 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 };
 
 // Exclude soft-deleted users from find queries by default
-userSchema.pre(/^find/, function (next) {
+userSchema.pre(/^find/, function () {
   this.where({ isDeleted: { $ne: true } });
-  next();
 });
 
 const User = mongoose.model("User", userSchema);
