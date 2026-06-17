@@ -11,9 +11,9 @@ const Stats = lazy(() => import('./pages/Stats'));
 
 // Simple loader component
 const Loader = () => (
-  <div className="h-screen flex flex-col items-center justify-center gap-4 bg-slate-950">
+  <div className="h-screen flex flex-col items-center justify-center gap-4 bg-slate-50 dark:bg-slate-950">
     <div className="w-16 h-16 border-t-4 border-rose-500 border-solid rounded-full animate-spin"></div>
-    <p className="text-slate-400 text-sm">Loading Dashboard...</p>
+    <p className="text-slate-500 dark:text-slate-400 text-sm">Loading Dashboard...</p>
   </div>
 );
 

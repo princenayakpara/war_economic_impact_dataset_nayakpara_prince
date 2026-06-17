@@ -50,28 +50,28 @@ const Compare = () => {
 
   return (
     <div className="space-y-6 animate-scale-in">
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800/80">
+      <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80">
         <form onSubmit={handleCompare} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Conflict Name 1</label>
+            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Conflict Name 1</label>
             <input
               type="text"
               list="conflict-suggestions"
               placeholder="e.g. Syrian Civil War"
               value={compareName1}
               onChange={(e) => setCompareName1(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-rose-500 focus:outline-none transition-all text-sm font-sans"
+              className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-700 focus:border-rose-500 focus:outline-none transition-all text-sm font-sans"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Conflict Name 2</label>
+            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Conflict Name 2</label>
             <input
               type="text"
               list="conflict-suggestions"
               placeholder="e.g. Russia-Ukraine War"
               value={compareName2}
               onChange={(e) => setCompareName2(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-rose-500 focus:outline-none transition-all text-sm font-sans"
+              className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-700 focus:border-rose-500 focus:outline-none transition-all text-sm font-sans"
             />
           </div>
           <datalist id="conflict-suggestions">
@@ -85,7 +85,7 @@ const Compare = () => {
           <button
             type="submit"
             disabled={compareLoading}
-            className="w-full py-2.5 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-500/10 active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-slate-900 dark:text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-rose-500/10 active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {compareLoading ? (
               <>
@@ -112,41 +112,41 @@ const Compare = () => {
       {compareResult ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-scale-in">
           {[compareResult.conflict1, compareResult.conflict2].map((conflict, idx) => (
-            <div key={idx} className="glass-panel p-6 rounded-2xl border border-slate-800/80 relative overflow-hidden">
+            <div key={idx} className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 relative overflow-hidden">
               <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl ${idx === 0 ? 'bg-rose-600/5' : 'bg-indigo-600/5'}`}></div>
               <div className="flex justify-between items-start">
                 <div>
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${idx === 0 ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'}`}>
                     Conflict {idx + 1}
                   </span>
-                  <h3 className="text-2xl font-bold text-white mt-2 font-sans">{conflict.Conflict_Name}</h3>
-                  <p className="text-xs text-slate-400">{conflict.Conflict_Type} &bull; {conflict.Region}</p>
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 font-sans">{conflict.Conflict_Name}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{conflict.Conflict_Type} &bull; {conflict.Region}</p>
                 </div>
                 <div className="text-right">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300">{conflict.Status}</span>
-                  <p className="text-xs text-slate-400 mt-2 font-mono">{conflict.Start_Year} {conflict.End_Year ? `- ${conflict.End_Year}` : '(Ongoing)'}</p>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">{conflict.Status}</span>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-mono">{conflict.Start_Year} {conflict.End_Year ? `- ${conflict.End_Year}` : '(Ongoing)'}</p>
                 </div>
               </div>
 
               <div className="mt-6 space-y-4">
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/50 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">GDP Contraction</span>
+                <div className="p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">GDP Contraction</span>
                   <span className="font-mono text-sm font-bold text-red-400">{conflict["GDP_Change_%"]}%</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/50 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Peak Inflation</span>
+                <div className="p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Peak Inflation</span>
                   <span className="font-mono text-sm font-bold text-rose-400">{conflict["Inflation_Rate_%"]}%</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/50 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Wartime Poverty Rate</span>
-                  <span className="font-mono text-sm font-bold text-slate-200">{conflict["During_War_Poverty_Rate_%"]}%</span>
+                <div className="p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Wartime Poverty Rate</span>
+                  <span className="font-mono text-sm font-bold text-slate-800 dark:text-slate-200">{conflict["During_War_Poverty_Rate_%"]}%</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/50 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">War Costs (USD)</span>
+                <div className="p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">War Costs (USD)</span>
                   <span className="font-mono text-sm font-bold text-indigo-400">{formatUSD(conflict.Cost_of_War_USD)}</span>
                 </div>
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/50 flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Black Market Level</span>
+                <div className="p-3 bg-white dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Black Market Level</span>
                   <span className="font-mono text-sm font-bold text-amber-400">{conflict.Black_Market_Activity_Level || 'N/A'}</span>
                 </div>
               </div>
@@ -154,7 +154,7 @@ const Compare = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-slate-500 font-semibold border-2 border-dashed border-slate-800 rounded-2xl">
+        <div className="text-center py-12 text-slate-500 font-semibold border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
           Select two conflicts above to begin economic damage analysis comparison.
         </div>
       )}

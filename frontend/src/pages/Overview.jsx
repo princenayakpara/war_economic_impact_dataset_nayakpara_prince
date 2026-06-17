@@ -25,25 +25,25 @@ const Overview = () => {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
         <div className="w-16 h-16 border-t-4 border-rose-500 border-solid rounded-full animate-spin"></div>
-        <p className="text-slate-400 text-sm">Querying economic intelligence database...</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm">Querying economic intelligence database...</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-8 animate-scale-in">
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-850 to-purple-950 border border-purple-500/20 shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-white via-slate-50 to-purple-50 dark:from-slate-900 dark:via-slate-850 dark:to-purple-950 border border-purple-500/10 dark:border-purple-500/20 shadow-2xl relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="relative z-10 max-w-2xl">
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 tracking-wider uppercase">Statistical Insight</span>
-          <h2 className="text-2xl md:text-3xl font-extrabold mt-3 tracking-tight text-white">The Economic Trauma of War</h2>
-          <p className="text-slate-300 text-sm md:text-base mt-2 leading-relaxed">
+          <h2 className="text-2xl md:text-3xl font-extrabold mt-3 tracking-tight text-slate-900 dark:text-white">The Economic Trauma of War</h2>
+          <p className="text-slate-700 dark:text-slate-300 text-sm md:text-base mt-2 leading-relaxed">
             Measuring critical historical metrics of economic decay, hyperinflation spikes, infrastructure destruction costs, and household poverty across {stats?.totalConflicts?.toLocaleString() || 0} conflicts worldwide.
           </p>
         </div>
         <div className="relative z-10 flex gap-4">
           <button 
             onClick={() => navigate('/explorer')}
-            className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-xl text-sm transition-all shadow-lg hover:shadow-rose-600/30 active:scale-95"
+            className="px-5 py-2.5 bg-rose-600 hover:bg-rose-500 text-slate-900 dark:text-white font-semibold rounded-xl text-sm transition-all shadow-lg hover:shadow-rose-600/30 active:scale-95"
           >
             Explore Raw Data
           </button>
@@ -100,17 +100,17 @@ const Overview = () => {
       </div>
 
       {/* Regional Quick Summary Chart */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800/80 shadow-md">
+      <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-md">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-bold text-white">Wartime Average GDP Loss & Conflicts Count by Region</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Wartime Average GDP Loss & Conflicts Count by Region</h3>
             <p className="text-xs text-slate-500">Macroeconomic contraction mapped by geographical territories</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="flex justify-center items-center py-4 bg-slate-900/50 rounded-xl p-4 border border-slate-800">
-            <svg viewBox="0 0 500 240" className="w-full h-auto text-slate-300 font-sans">
+          <div className="flex justify-center items-center py-4 bg-white dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-slate-800">
+            <svg viewBox="0 0 500 240" className="w-full h-auto text-slate-700 dark:text-slate-300 font-sans">
               <line x1="60" y1="30" x2="480" y2="30" stroke="rgba(148, 163, 184, 0.05)" strokeDasharray="4 4" />
               <line x1="60" y1="80" x2="480" y2="80" stroke="rgba(148, 163, 184, 0.05)" strokeDasharray="4 4" />
               <line x1="60" y1="130" x2="480" y2="130" stroke="rgba(148, 163, 184, 0.05)" strokeDasharray="4 4" />
@@ -118,9 +118,9 @@ const Overview = () => {
               <line x1="60" y1="180" x2="480" y2="180" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="2" />
               <line x1="60" y1="20" x2="60" y2="180" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="2" />
 
-              <text x="50" y="34" className="text-[10px] text-right font-medium text-slate-500" textAnchor="end">0%</text>
-              <text x="50" y="84" className="text-[10px] text-right font-medium text-slate-500" textAnchor="end">-20%</text>
-              <text x="50" y="134" className="text-[10px] text-right font-medium text-slate-500" textAnchor="end">-40%</text>
+              <text x="50" y="34" className="text-[10px] text-right font-medium text-slate-500" fill="currentColor" textAnchor="end">0%</text>
+              <text x="50" y="84" className="text-[10px] text-right font-medium text-slate-500" fill="currentColor" textAnchor="end">-20%</text>
+              <text x="50" y="134" className="text-[10px] text-right font-medium text-slate-500" fill="currentColor" textAnchor="end">-40%</text>
 
               {regionStats.slice(0, 5).map((r, i) => {
                 const name = r.region;
@@ -137,9 +137,9 @@ const Overview = () => {
                   <g key={i} className="group cursor-pointer">
                     <rect x={x - 6} y="20" width={barWidth + 12} height="160" fill="transparent" className="hover:fill-slate-800/20 rounded-lg transition-colors duration-200" />
                     <rect x={x} y={yBar} width={barWidth} height={barHeight} fill={`url(#gradient-${i})`} rx="4" className="transition-all duration-300 shadow-xl" />
-                    <text x={x + barWidth/2} y={Math.max(25, yBar - 6)} textAnchor="middle" className="text-[10px] font-bold text-rose-400">{rawGdp.toFixed(1)}%</text>
-                    <text x={x + barWidth/2} y="198" textAnchor="middle" className="text-[10px] font-semibold text-slate-400 select-none">{name?.substring(0, 10)}</text>
-                    <text x={x + barWidth/2} y="210" textAnchor="middle" className="text-[8px] font-medium text-slate-500 select-none">({count} wars)</text>
+                    <text x={x + barWidth/2} y={Math.max(25, yBar - 6)} textAnchor="middle" className="text-[10px] font-bold text-rose-400" fill="currentColor">{rawGdp.toFixed(1)}%</text>
+                    <text x={x + barWidth/2} y="198" textAnchor="middle" className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 select-none" fill="currentColor">{name?.substring(0, 10)}</text>
+                    <text x={x + barWidth/2} y="210" textAnchor="middle" className="text-[8px] font-medium text-slate-500 select-none" fill="currentColor">({count} wars)</text>
                     <defs>
                       <linearGradient id={`gradient-${i}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#ef4444" />
@@ -153,18 +153,18 @@ const Overview = () => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400">Territory Analysis Breakdown</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Territory Analysis Breakdown</h4>
             <div className="divide-y divide-slate-800">
               {regionStats.map((item, index) => (
                 <div key={index} className="py-3 flex justify-between items-center text-sm">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-md"></span>
-                    <span className="font-semibold text-slate-200">{item.region}</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{item.region}</span>
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <span className="text-xs text-slate-500 block">Total Cost</span>
-                      <span className="font-mono text-slate-300 font-medium">{formatUSD(item.totalWarCost)}</span>
+                      <span className="font-mono text-slate-700 dark:text-slate-300 font-medium">{formatUSD(item.totalWarCost)}</span>
                     </div>
                     <div className="text-right">
                       <span className="text-xs text-slate-500 block">Avg GDP Impact</span>
@@ -179,17 +179,17 @@ const Overview = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800/80">
+        <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80">
           <h4 className="text-sm font-bold text-rose-500 uppercase tracking-widest">Informal Economy Spike</h4>
-          <h3 className="text-lg font-bold text-white mt-1">Socio-Economic Underground Sector Expansion</h3>
-          <p className="text-slate-400 text-xs mt-2 leading-relaxed">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">Socio-Economic Underground Sector Expansion</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-2 leading-relaxed">
             Wartime collapses push standard household businesses into informal black-market sectors. According to the database records, the informal shadow economy expands by an average of **35.4%** across conflict regions during active engagements, collapsing official taxation channels and creating extreme black market rates gap.
           </p>
         </div>
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800/80">
+        <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80">
           <h4 className="text-sm font-bold text-indigo-400 uppercase tracking-widest">Infrastructure Capital Cost</h4>
-          <h3 className="text-lg font-bold text-white mt-1">Post-conflict Reconstruction Liability</h3>
-          <p className="text-slate-400 text-xs mt-2 leading-relaxed">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">Post-conflict Reconstruction Liability</h3>
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-2 leading-relaxed">
             Resolved conflicts leave huge capital liabilities for generations. The estimated post-war reconstruction requirement spans anywhere between **150% to 400%** of the country's pre-war annual GDP. The aggregate reconstruction value indexed in our dataset is estimated at **$2.48 Trillion USD**.
           </p>
         </div>

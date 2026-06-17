@@ -8,10 +8,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/10 dark:border-slate-800/80 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between shadow-lg">
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200 dark:border-slate-800/10 dark:border-slate-800/80 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
         <div className="p-2 bg-gradient-to-tr from-rose-600 to-indigo-600 rounded-xl shadow-md shadow-rose-500/20">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-slate-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
         </div>
@@ -32,7 +32,7 @@ const Navbar = () => {
         <button
           id="theme-toggle-btn"
           onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-xl border border-slate-700/30 hover:bg-slate-800/40 transition-colors"
+          className="p-2 rounded-xl border border-slate-700/30 hover:bg-slate-100 dark:bg-slate-800/40 transition-colors"
           title="Toggle color theme"
         >
           {theme === 'dark' ? (

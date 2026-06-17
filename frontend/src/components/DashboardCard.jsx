@@ -10,11 +10,11 @@ const formatUSD = (num) => {
 
 export const DashboardCard = ({ title, mainValue, iconColorClass, iconPath, subtextLabel, subtextValue, additionalData }) => {
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-slate-800/80 shadow-md relative overflow-hidden group hover:border-slate-700/80 transition-all duration-300">
+    <div className="glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-md relative overflow-hidden group hover:border-slate-700/80 transition-all duration-300">
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{title}</p>
-          <h3 className={`text-3xl font-bold font-sans mt-2 ${additionalData?.valueColor || 'text-white'}`}>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">{title}</p>
+          <h3 className={`text-3xl font-bold font-sans mt-2 ${additionalData?.valueColor || 'text-slate-900 dark:text-white'}`}>
             {mainValue}
           </h3>
         </div>
@@ -25,25 +25,25 @@ export const DashboardCard = ({ title, mainValue, iconColorClass, iconPath, subt
         </div>
       </div>
       {subtextLabel && (
-        <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
-          <span className="font-medium text-slate-300">{subtextLabel}</span>
+        <div className="mt-4 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <span className="font-medium text-slate-700 dark:text-slate-300">{subtextLabel}</span>
           <span className="font-bold">{subtextValue}</span>
         </div>
       )}
       {additionalData?.progress && (
         <div className="mt-4">
-          <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
             <div className="bg-amber-500 h-1.5 rounded-full" style={{ width: `${additionalData.progress}%` }}></div>
           </div>
-          <div className="flex justify-between mt-1.5 text-[10px] text-slate-400">
+          <div className="flex justify-between mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">
             <span>{additionalData.progressLabel1}</span>
             <span>{additionalData.progressLabel2}</span>
           </div>
         </div>
       )}
       {additionalData?.truncateBlock && (
-        <div className="mt-3 text-xs text-slate-400 truncate">
-          <span className="font-semibold text-slate-300">{additionalData.truncateBlock.title || 'N/A'}</span>
+        <div className="mt-3 text-xs text-slate-500 dark:text-slate-400 truncate">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">{additionalData.truncateBlock.title || 'N/A'}</span>
           <span className="block text-[10px] text-slate-500">{additionalData.truncateBlock.subtitle || 'N/A'}</span>
         </div>
       )}
