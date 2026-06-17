@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/AdminLayout';
+import AuthLayout from './components/AuthLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 // Lazy loading pages for better performance
@@ -8,6 +10,8 @@ const Overview = lazy(() => import('./pages/Overview'));
 const Explorer = lazy(() => import('./pages/Explorer'));
 const Compare = lazy(() => import('./pages/Compare'));
 const Stats = lazy(() => import('./pages/Stats'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
 
 // Simple loader component
 const Loader = () => (
@@ -22,13 +26,24 @@ function App() {
     <Router>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<AdminLayout />}>
-            <Route index element={<Overview />} />
-            <Route path="explorer" element={<Explorer />} />
-            <Route path="compare" element={<Compare />} />
-            <Route path="stats" element={<Stats />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Public Auth Routes */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Route>
+
+          {/* Protected Dashboard Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<AdminLayout />}>
+              <Route index element={<Overview />} />
+              <Route path="explorer" element={<Explorer />} />
+              <Route path="compare" element={<Compare />} />
+              <Route path="stats" element={<Stats />} />
+            </Route>
+          </Route>
+
+          {/* Catch-all redirect */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Suspense>
     </Router>

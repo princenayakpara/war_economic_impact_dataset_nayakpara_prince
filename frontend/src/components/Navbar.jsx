@@ -1,17 +1,26 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../store/uiSlice';
+import { logout } from '../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const theme = useSelector((state) => state.ui.theme);
   const isApiLive = useSelector((state) => state.data?.isApiLive ?? true);
+  const user = useSelector((state) => state.user?.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login', { replace: true });
+  };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200 dark:border-slate-800/10 dark:border-slate-800/80 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between shadow-lg">
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200 dark:border-slate-800/80 px-4 md:px-8 py-4 flex flex-wrap items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
         <div className="p-2 bg-gradient-to-tr from-rose-600 to-indigo-600 rounded-xl shadow-md shadow-rose-500/20">
-          <svg className="w-6 h-6 text-slate-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
         </div>
@@ -23,7 +32,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mt-3 sm:mt-0">
+      <div className="flex items-center gap-3 mt-3 sm:mt-0">
         <div id="api-status-indicator" className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${isApiLive ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' : 'bg-amber-500/10 text-amber-500 border-amber-500/30'}`}>
           <span className={`w-2.5 h-2.5 rounded-full ${isApiLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`}></span>
           {isApiLive ? 'API LIVE' : 'OFFLINE MODE'}
@@ -32,7 +41,7 @@ const Navbar = () => {
         <button
           id="theme-toggle-btn"
           onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-xl border border-slate-700/30 hover:bg-slate-100 dark:bg-slate-800/40 transition-colors"
+          className="p-2 rounded-xl border border-slate-200 dark:border-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-colors"
           title="Toggle color theme"
         >
           {theme === 'dark' ? (
@@ -45,6 +54,29 @@ const Navbar = () => {
             </svg>
           )}
         </button>
+
+        {/* User Profile & Logout */}
+        {user && (
+          <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-700/40">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
+              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            <div className="hidden md:block">
+              <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">{user.name || 'User'}</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 capitalize">{user.role || 'analyst'}</p>
+            </div>
+            <button
+              id="logout-btn"
+              onClick={handleLogout}
+              className="ml-1 p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+              title="Logout"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
