@@ -7,7 +7,7 @@
   "variable": [
     {
       "key": "baseURL",
-      "value": "http://localhost:5000",
+      "value": "https://war-economic-impact-dataset-nayakpara.onrender.com",
       "type": "string"
     },
     {
